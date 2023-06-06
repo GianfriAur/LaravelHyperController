@@ -1,0 +1,47 @@
+{
+  "name": "gianfriaur/laravel-hyper-controller",
+  "description": "Laravel Hyper Controller",
+  "license": "MIT",
+  "keywords": [
+    "laravel",
+    "gianfriaur"
+  ],
+  "type": "library",
+  "authors": [
+    {
+      "name": "GianfriAur",
+      "email": "gianfri.aur@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Gianfriaur\\HyperController\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Gianfriaur\\HyperController\\Tests\\": "tests/"
+    }
+  },
+  "require": {
+    "php": "^8.1",
+    "ext-pdo": "*",
+    "laravel/framework": "v10.*"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^8.0",
+    "nunomaduro/collision": "^7.0"
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "@php vendor/bin/testbench package:discover --ansi"
+    ]
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Gianfriaur\\HyperController\\HyperControllerServiceProvider"
+      ]
+    }
+  }
+}
