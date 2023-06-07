@@ -1,12 +1,12 @@
-# laravel-hyper-controller
+# Laravel Hyper Controller
 
+---
 
-### This project is not finished yet but if you want to use it remember to:
-- whenever you create or modify a `HyperController` to delete the `bootstrap/cache/hyper_controllers.php` file
-- you may run into autoloading problems if you don't configure the package correctly
+### This project is not finished yet but if you want to use and maybe find some bug you are welcome
 
+---
 
-## Publish configuration file
+### Publish configuration file
 > php artisan vendor:publish --provider="Gianfriaur\HyperController\HyperControllerServiceProvider"
 
 ### A HyperController Example
@@ -115,56 +115,15 @@ GET|POST|PUT|HEAD my/route/{action?} ............... my_route › App\Http\Contr
 
 ---
 
-## Compatibility with gianfriaur/package-loader package
-if the `gianfriaur/package-loader` package is present in the vendor it is possible to autoload the controllers
+### Laravel Hyper Controller with gianfriaur/package-loader
 
-ex:
+This library is part of the `gianfriaur/package-loader` compatible collection
 
-```PHP
+To know how or to find out more [Read More](./doc/package_loader_autoload.MD)
 
-use Gianfriaur\HyperController\PackageLoader\PackageWithHyperController;
-use Gianfriaur\PackageLoader\PackageProvider\AbstractPackageProvider;
+---
 
-class TestPackageProvider extends AbstractPackageProvider implements PackageWithHyperController
-{
-    public function getHyperControllers(): array
-    {
-        return [
-            ToUpdateAdmin::class,
-        ];
-    }
-    
-    ...
-}
-```
+### Next releases:
 
-this feature can be turned off by setting the `package_loader_autoload` configuration to false
-
-`config/hyper_controller.php`
-```PHP
-return [
-
-    ...
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Package Loader Autoload
-    |--------------------------------------------------------------------------
-    |
-    | if the 'gianfriaur/package-loader' package is installed it automatically
-    |     loads the resolver for each packet
-    |     can be:
-    |         'auto' => if it is not found, the package does not perform any
-    |                       action otherwise it behaves like true
-    |         true   => if it doesn't find the package, throw an exception,
-    |                       otherwise perform the action
-    |         false  => no action will be taken even if the
-    |                       'gianfriaur/package-loader' is installed
-    |
-    */
-    'package_loader_autoload' => false,
-    
-    ...
-
-];
-```
+- The `php artisan route:list -vv` command with the second level of verbosity will have to show all the information of a HyperController
+- Add support via Attribute to middleware

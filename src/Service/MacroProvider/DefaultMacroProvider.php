@@ -7,6 +7,7 @@ use Gianfriaur\HyperController\Service\AnnotationParserService\AnnotationParserS
 use Gianfriaur\PackageLoader\PackageProvider\PackageWithLocalizationInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Translation\Translator;
@@ -23,18 +24,6 @@ readonly class DefaultMacroProvider implements MacroProviderInterface
 
     }
 
-
-    // make sure in every condition the callback was called also after already resolved
-    protected function callAfterResolving($name, $callback)
-    {
-        $this->app->afterResolving($name, $callback);
-
-        if ($this->app->resolved($name)) {
-            $callback($this->app->make($name), $this->app);
-        }
-    }
-
-
     public function generateRouteData($hyperControllerName): array
     {
         $controller_describer = $this->annotationParserService->getHyperControllerDescriber($hyperControllerName);
@@ -44,20 +33,20 @@ readonly class DefaultMacroProvider implements MacroProviderInterface
         $actions = array_filter(array_map(fn($a) => $a->getNormalizedPartialPath(), $controller_describer->actions), fn($m) => $m !== '');
         $base_path = $controller_describer->basePath;
         $alias = $controller_describer->baseAlias;
-        $alias_actions = array_map(fn($a) => ['fullPath'=>$a->fullPath, 'fullAlias'=>$a->fullAlias],  array_filter($controller_describer->actions,fn($m) => !$m->index ));
-        $aliases=[];
-        foreach ($alias_actions as $alias_action ) $aliases[$alias_action['fullAlias']] = $alias_action['fullPath'];
+        $alias_actions = array_map(fn($a) => ['fullPath' => $a->fullPath, 'fullAlias' => $a->fullAlias], array_filter($controller_describer->actions, fn($m) => !$m->index));
+        $aliases = [];
+        foreach ($alias_actions as $alias_action) $aliases[$alias_action['fullAlias']] = $alias_action['fullPath'];
         return [
             'has_index' => $has_index,
             'base_path' => $base_path,
             'http_methods' => $http_methods,
             'alias' => $alias,
             'actionsRegex' => implode('|', $actions),
-            'aliases' =>$aliases
+            'aliases' => $aliases
         ];
     }
 
-
+    /** @noinspection PhpVariableIsUsedOnlyInClosureInspection */
     function registerMacros(): void
     {
 
@@ -66,12 +55,18 @@ readonly class DefaultMacroProvider implements MacroProviderInterface
         if (!Route::hasMacro('hyperController')) {
             Route::macro('hyperController', function (string $hyperControllerName) use ($selfMacroProvider) {
 
+                // if true remember only for debug else remember forever
+                $remember = (app()->hasDebugModeEnabled() || !App::isProduction()) === true;
+
                 [$has_index, $base_path, $http_methods, $alias, $actionsRegex] =
                     array_values(
-                        Cache::store('hyper-controller')->rememberForever(
+                        $remember
+                            ? Cache::store('hyper-controller')->remember(
+                            $hyperControllerName, 1,
+                            fn() => $selfMacroProvider->generateRouteData($hyperControllerName))
+                            : Cache::store('hyper-controller')->rememberForever(
                             $hyperControllerName,
-                            fn() => $selfMacroProvider->generateRouteData($hyperControllerName)
-                        )
+                            fn() => $selfMacroProvider->generateRouteData($hyperControllerName))
                     );
 
                 /** @var Router $this */
