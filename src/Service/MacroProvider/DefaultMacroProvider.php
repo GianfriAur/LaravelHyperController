@@ -2,16 +2,13 @@
 
 namespace Gianfriaur\HyperController\Service\MacroProvider;
 
-use Gianfriaur\HyperController\Http\Controllers\HyperController;
 use Gianfriaur\HyperController\Http\Middleware\HyperControllerMiddleware;
 use Gianfriaur\HyperController\Service\AnnotationParserService\AnnotationParserServiceInterface;
-use Gianfriaur\PackageLoader\PackageProvider\PackageWithLocalizationInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Translation\Translator;
 
 readonly class DefaultMacroProvider implements MacroProviderInterface
 {

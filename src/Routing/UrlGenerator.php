@@ -2,13 +2,11 @@
 
 namespace Gianfriaur\HyperController\Routing;
 
-use Gianfriaur\HyperController\Cache\HyperControllerStore;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\RouteCollectionInterface;
 use Illuminate\Routing\UrlGenerator as BaseUrlGenerator;
 use Illuminate\Support\Facades\Cache;
-use Packages\Core\Admin\System\Apps\ToUpdateAdmin;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class UrlGenerator extends BaseUrlGenerator

@@ -3,9 +3,7 @@
 namespace Gianfriaur\HyperController\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Gianfriaur\HyperController\Describer\HyperControllerActionDescriber;
-use Gianfriaur\HyperController\Service\AnnotationParserService\AnnotationParserServiceInterface;
 use Gianfriaur\HyperController\Service\ResolverService\HyperControllerDependencyResolverInterface;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;

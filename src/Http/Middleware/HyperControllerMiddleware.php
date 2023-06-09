@@ -8,7 +8,6 @@ use Gianfriaur\HyperController\Service\ResolverService\HyperControllerDependency
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Routing\MiddlewareNameResolver;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 

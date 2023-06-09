@@ -10,12 +10,8 @@ use Gianfriaur\HyperController\Service\AnnotationParserService\AnnotationParserS
 use Gianfriaur\HyperController\Service\CacheService\CacheServiceInterface;
 use Gianfriaur\HyperController\Service\MacroProvider\MacroProviderInterface;
 use Gianfriaur\HyperController\Service\ResolverService\HyperControllerDependencyResolverInterface;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Support\DeferrableProvider;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Translation\Translator;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

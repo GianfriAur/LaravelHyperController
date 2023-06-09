@@ -2,7 +2,6 @@
 
 namespace Gianfriaur\HyperController\Exception;
 
-use Gianfriaur\HyperController\Service\MacroProvider\MacroProviderInterface;
 use Throwable;
 
 class BadServiceInterfaceException extends HyperControllerException
