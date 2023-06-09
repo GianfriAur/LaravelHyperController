@@ -3,7 +3,9 @@
 namespace Gianfriaur\HyperController\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Gianfriaur\HyperController\Describer\HyperControllerActionDescriber;
+use Gianfriaur\HyperController\Service\AnnotationParserService\AnnotationParserServiceInterface;
 use Gianfriaur\HyperController\Service\ResolverService\HyperControllerDependencyResolverInterface;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
@@ -28,9 +30,6 @@ class HyperController extends Controller
         return app()->make(HyperControllerDependencyResolverInterface::class)->extractHyperControllerActionDescriber($this, $method);
     }
 
-
-
-
     /**
      * @throws BindingResolutionException
      */
@@ -44,12 +43,12 @@ class HyperController extends Controller
         );
     }
 
-
     /**
      * @throws BindingResolutionException
      */
     public function handle(Request $request, ...$parameters)
     {
+
         $method = Route::current()->parameter('action', Arr::last($parameters));
 
         $prepare = collect($parameters)

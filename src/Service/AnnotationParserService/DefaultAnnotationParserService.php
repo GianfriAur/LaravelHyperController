@@ -5,6 +5,8 @@ namespace Gianfriaur\HyperController\Service\AnnotationParserService;
 use Gianfriaur\HyperController\Attribute\Http\Controller\Action;
 use Gianfriaur\HyperController\Attribute\Http\Controller\Controller;
 use Gianfriaur\HyperController\Attribute\Http\Controller\IndexAction;
+use Gianfriaur\HyperController\Attribute\Http\Controller\Middleware;
+use Gianfriaur\HyperController\Attribute\Http\Controller\WithoutMiddleware;
 use Gianfriaur\HyperController\Describer\HyperControllerActionDescriber;
 use Gianfriaur\HyperController\Describer\HyperControllerDescriber;
 use Gianfriaur\HyperController\Exception\HyperControllerAliasAnnotationException;
@@ -38,6 +40,30 @@ readonly class DefaultAnnotationParserService implements AnnotationParserService
         throw new HyperControllerMissingControllerAnnotationException($reflection->getName());
     }
 
+    public function getMiddlewares(ReflectionMethod|ReflectionClass $reflection): array
+    {
+        foreach ($reflection->getAttributes() as $attribute) {
+            if ($instance = $attribute->newInstance()) {
+                if ($instance instanceof Middleware) {
+                    return $instance->middlewares;
+                }
+            }
+        }
+        return [];
+    }
+
+    public function getWithoutMiddlewares(ReflectionMethod $reflection): array
+    {
+        foreach ($reflection->getAttributes() as $attribute) {
+            if ($instance = $attribute->newInstance()) {
+                if ($instance instanceof WithoutMiddleware) {
+                    return $instance->middlewares;
+                }
+            }
+        }
+        return [];
+    }
+
     /**
      * @throws HyperControllerAliasAnnotationException
      * @return array<HyperControllerActionDescriber>
@@ -58,6 +84,8 @@ readonly class DefaultAnnotationParserService implements AnnotationParserService
                             reflectedPointer: $reflection->getName().'@'. $method->getName(),
                             index: true,
                             methods: is_array($instance->method) ? $instance->method : [$instance->method],
+                            middlewares: $this->getMiddlewares($method),
+                            withoutMiddlewares: $this->getWithoutMiddlewares($method)
                         );
                     } elseif ($instance instanceof Action) {
 
@@ -72,6 +100,8 @@ readonly class DefaultAnnotationParserService implements AnnotationParserService
                             reflectedPointer: $reflection->getName().'@'. $method->getName(),
                             index: false,
                             methods: is_array($instance->method) ? $instance->method : [$instance->method],
+                            middlewares: $this->getMiddlewares($method),
+                            withoutMiddlewares: $this->getWithoutMiddlewares($method)
                         );
                     }
                 }
@@ -101,15 +131,19 @@ readonly class DefaultAnnotationParserService implements AnnotationParserService
         $has_index = count(array_filter($methods, fn($e) => $e->index)) > 0;
         $all_methods = array_merge(...array_map(fn($e) => $e->methods, $methods));
 
+        $middlewares = $this->getMiddlewares($reflection);
+        $middlewares_r = array_unique(array_merge(...array_map(fn($actions)=>$actions->withoutMiddlewares,$methods)));
+
         $describer = new HyperControllerDescriber(
             basePath: $path,
             baseAlias: $alias,
             hasIndex: $has_index,
             actions: $methods,
             methods: $this->uniqueMethods($all_methods),
-            class: $className
+            class: $className,
+            middlewares: $middlewares,
+            skip_middlewares: $middlewares_r
         );
-
         return $describer;
     }
 }

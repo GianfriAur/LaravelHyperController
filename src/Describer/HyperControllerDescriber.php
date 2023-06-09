@@ -23,7 +23,9 @@ readonly class HyperControllerDescriber
         public bool   $hasIndex,
         public array $actions,
         public array  $methods,
-        public string $class
+        public string $class,
+        public array $middlewares,
+        public array $skip_middlewares,
     )
     {
     }

@@ -2,6 +2,7 @@
 /** @noinspection PhpUndefinedClassInspection */
 namespace Gianfriaur\HyperController\PackageLoader;
 
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Cache;
@@ -16,13 +17,11 @@ readonly class PackageLoaderInjector
 
     public function registerHyperController(): void
     {
-        for ($i = 0; $i < 10; $i++) {
-            foreach ($this->packageProviderService->getPackageProviders() as $package_name => $packageProvider) {
-                if ($packageProvider instanceof PackageWithHyperController) {
-                    foreach ($packageProvider->getHyperControllers() as $controller) {
-                        /** @noinspection PhpUndefinedMethodInspection */
-                        Route::hyperController($controller);
-                    }
+        foreach ($this->packageProviderService->getPackageProviders() as $package_name => $packageProvider) {
+            if ($packageProvider instanceof PackageWithHyperController) {
+                foreach ($packageProvider->getHyperControllers() as $controller) {
+                    /** @noinspection PhpUndefinedMethodInspection */
+                    Route::hyperController($controller);
                 }
             }
         }

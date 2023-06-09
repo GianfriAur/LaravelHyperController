@@ -3,6 +3,7 @@
 namespace Gianfriaur\HyperController\Service\MacroProvider;
 
 use Gianfriaur\HyperController\Http\Controllers\HyperController;
+use Gianfriaur\HyperController\Http\Middleware\HyperControllerMiddleware;
 use Gianfriaur\HyperController\Service\AnnotationParserService\AnnotationParserServiceInterface;
 use Gianfriaur\PackageLoader\PackageProvider\PackageWithLocalizationInterface;
 use Illuminate\Foundation\Application;
@@ -36,13 +37,18 @@ readonly class DefaultMacroProvider implements MacroProviderInterface
         $alias_actions = array_map(fn($a) => ['fullPath' => $a->fullPath, 'fullAlias' => $a->fullAlias], array_filter($controller_describer->actions, fn($m) => !$m->index));
         $aliases = [];
         foreach ($alias_actions as $alias_action) $aliases[$alias_action['fullAlias']] = $alias_action['fullPath'];
+
+
+
         return [
             'has_index' => $has_index,
             'base_path' => $base_path,
             'http_methods' => $http_methods,
             'alias' => $alias,
             'actionsRegex' => implode('|', $actions),
-            'aliases' => $aliases
+            'aliases' => $aliases,
+            'middlewares' => array_diff($controller_describer->middlewares,$controller_describer->skip_middlewares),
+            'skip_middlewares' => $controller_describer->skip_middlewares
         ];
     }
 
@@ -58,7 +64,7 @@ readonly class DefaultMacroProvider implements MacroProviderInterface
                 // if true remember only for debug else remember forever
                 $remember = (app()->hasDebugModeEnabled() || !App::isProduction()) === true;
 
-                [$has_index, $base_path, $http_methods, $alias, $actionsRegex] =
+                [$has_index, $base_path, $http_methods, $alias, $actionsRegex, $aliases ,$middlewares] =
                     array_values(
                         $remember
                             ? Cache::store('hyper-controller')->remember(
@@ -77,6 +83,8 @@ readonly class DefaultMacroProvider implements MacroProviderInterface
                 if (!is_null($alias)) {
                     $route->name($alias);
                 }
+
+                $route->middleware(HyperControllerMiddleware::class.":".$hyperControllerName);
 
                 return $route;
             });

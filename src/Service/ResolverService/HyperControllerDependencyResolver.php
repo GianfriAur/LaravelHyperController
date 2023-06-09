@@ -3,6 +3,7 @@
 namespace Gianfriaur\HyperController\Service\ResolverService;
 
 use Gianfriaur\HyperController\Describer\HyperControllerActionDescriber;
+use Gianfriaur\HyperController\Describer\HyperControllerDescriber;
 use Gianfriaur\HyperController\Http\Controllers\HyperController;
 use Gianfriaur\HyperController\Service\AnnotationParserService\AnnotationParserServiceInterface;
 use Illuminate\Contracts\Routing\UrlRoutable;
@@ -31,8 +32,11 @@ class HyperControllerDependencyResolver implements HyperControllerDependencyReso
     }
 
 
-    public function extractHyperControllerActionDescriber(HyperController $screen, ?string $method) :HyperControllerActionDescriber {
-        $selfDescriber = $this->annotationParserService->getHyperControllerDescriber($screen::class);
+    public function extractHyperControllerActionDescriber(HyperController|HyperControllerDescriber $selfDescriber, ?string $method) :HyperControllerActionDescriber {
+        if ($selfDescriber instanceof HyperController) {
+            $selfDescriber = $this->annotationParserService->getHyperControllerDescriber($selfDescriber::class);
+        }
+
 
         if (!$method){
             if (!$selfDescriber->hasIndex){

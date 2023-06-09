@@ -14,7 +14,9 @@ readonly class HyperControllerActionDescriber
         public string $fullAlias,
         public string $reflectedPointer,
         public bool $index,
-        public array $methods
+        public array $methods,
+        public array $middlewares,
+        public array $withoutMiddlewares,
     )
     {
     }
