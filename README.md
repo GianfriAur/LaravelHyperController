@@ -1,129 +1,64 @@
-# Laravel Hyper Controller
+
+<h1 align="center">Laravel Hyper Controller</h1>
+
+
+
+## ⚽️ Goal
+
+----
+
+The library is primarily intended to reduce the time Laravel takes to solve a route.
+
+For example let's imagine an application with 30 entities, each of them has the CRUD via api 
+so we can assume that only for the model routes we have 150 routes, if we also have an administration 
+section for managing these we can even get to 300 routes.
+
+This package is found to be even more useful with systems that automatically create admin interfaces 
+or api routes since they usually create a lot of these, such as Sonata in Symfony, which creates a 
+mountain of routes by significantly increasing the request determination time.
+
+This library allows you to **unify all the routes of a controller into one** avoiding that they grow exponentially slowing down your application
+
+
+## ✨ Features
+
+---- 
+* Collects the routes of a controller into a single laravel route, [Read More](#)
+* Total customization of a route with parameters [Read More](#)
+* Middleware association for specific action, with insertion and/or removal rules [Read More](#)
+* Highly performing and cached
+* Free rewriting of all its parts and the ability to replace them via config [Read More](#)
+* Configuring controllers via attribute (no extra files) [Read More](#)
+* Compatibility with `gianfriaur/package-loader` package [Read More](#)
+
+
+## 🤙🏼 Quickstart
 
 ---
 
-### This project is not finished yet but if you want to use and maybe find some bug you are welcome
-
----
-
-### Publish configuration file
+#### 1) Install The package
+> TODO
+#### 2) Publish configuration file
 > php artisan vendor:publish --provider="Gianfriaur\HyperController\HyperControllerServiceProvider"
 
-### A HyperController Example
+**3) Everything is ready, now you can start using HyperController [Create your first controller](./doc/create_your_first_controller.MD)**
 
-```PHP
 
-namespace App\Http\Controllers;
+you are curious and want to go deeper, read the [full documentation](./doc/index.MD)
 
-use Gianfriaur\HyperController\Attribute\Http\Controller as HC;
-use Gianfriaur\HyperController\Enum\ActionMethodEnum;
-use Illuminate\Http\Request;
-use Gianfriaur\HyperController\Http\Controllers\HyperController;
 
-#[HC\Controller(path: 'my/route', alias: 'my_route')]
-class TestController extends HyperController
-{
 
-    // route: GET|HEAD /my/route
-    // generate: route('my_route')
-    #[HC\IndexAction()]
-    public function list(){
-        return 'index';
-    }
 
-    // route: GET|HEAD /my/route/fetch
-    // generate: route('my_route.fetch')
-    #[HC\Action( alias: 'retrieve')]
-    public function fetch(){
-        return 'fetch';
-    }
+## 📝 Next releases
 
-    // route: GET|HEAD /my/route/test
-    // generate: route('my_route.check')
-    #[HC\Action(path:'test',alias: 'check')]
-    public function check(){
-        return 'check';
-    }
-
-    // route: GET|HEAD /my/route/detail/4
-    // generate: route('my_route.detail',[ 'id' => 4 ])
-    #[HC\Action(path:'detail/{id}',alias: 'detail')]
-    public function detail(int $id)
-    {
-        return 'detail';
-    }
-
-    // route: GET|HEAD /my/route/detail/UUID/action
-    // generate: route('my_route.detail_action',[ 'text' => 'UUID' ])
-    #[HC\Action(path:'detail/{uuid}/action',alias: 'detail_action')]
-    public function detailAction(string $uuid)
-    {
-        return 'detailAction';
-    }
-
-    // route: POST /my/route/detail/1
-    // generate: route('my_route.create',[ 'text' => 1 ])
-    #[HC\Action(method: [ActionMethodEnum::POST], path: 'detail/{id}', alias: 'create')]
-    public function create(Request $request,int $id)
-    {
-      return 'create';
-    }
-    
-    // route: PUT /my/route/detail/1
-    // generate: route('my_route.update',[ 'text' => 1 ])
-    #[HC\Action(method: [ActionMethodEnum::PUT], path: 'detail/{id}', alias: 'update')]
-    public function create(Request $request,int $id)
-    {
-      return 'update';
-    }
-    
-    // route: POST|GET /my/route/complex/1/2/my_text
-    // generate: route('my_route.complex',[ 'id' => 1, 'id2' => 2, 'text' => 'my_text' ])
-    #[HC\Action(method: [ActionMethodEnum::POST, ActionMethodEnum::GET], path: 'complex/{id}/{id2}/{text}')]
-    public function complex(Request $request, int $id, int $id2, int $text)
-    {
-      return 'complex';
-    }
-}
-
-```
-
-#### Load Controller 
-in the `AppServiceProvider` or any other `ServiceProvider` or in `routes/web.php`
-
-add:
-
-```PHP
-Route::hyperController(App\Http\Controllers\TestController::class);
-```
-
-#### this controller will generate the following output in the `php artisan route:list` command
-```
-GET|POST|PUT|HEAD my/route/{action?} ............... my_route › App\Http\Controllers\TestController@handle
-```
-
-### list of all supported methods:
-
-- `ActionMethodEnum:CONNECT`
-- `ActionMethodEnum:DELETE`
-- `ActionMethodEnum:GET`
-- `ActionMethodEnum:HEAD`
-- `ActionMethodEnum:OPTIONS`
-- `ActionMethodEnum:POST`
-- `ActionMethodEnum:PUT`
-- `ActionMethodEnum:PATCH`
-
----
-
-### Laravel Hyper Controller with gianfriaur/package-loader
-
-This library is part of the `gianfriaur/package-loader` compatible collection
-
-To know how or to find out more [Read More](./doc/package_loader_autoload.MD)
-
----
-
-### Next releases:
+---- 
 
 - The `php artisan route:list -vv` command with the second level of verbosity will have to show all the information of a HyperController
-- Add support via Attribute to middleware
+
+
+## 🎉 License
+
+---- 
+
+The Laravel Hyper Controller package is licensed under the terms of the MIT license and is available for free.
+
