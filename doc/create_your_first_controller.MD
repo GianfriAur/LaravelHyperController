@@ -60,8 +60,6 @@ class TestController extends HyperController
 }
 ```
 
-these are an example of what we can do with library annotations, if you want to dig deeper [Go to the full documentation](./index.MD)
-
 as a last action we have to register the controller, in `web.php` we add the following line
 ```PHP
 Route::hyperController(App\Http\Controllers\TestController::class);

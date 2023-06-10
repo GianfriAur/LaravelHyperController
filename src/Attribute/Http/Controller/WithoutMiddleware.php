@@ -2,7 +2,7 @@
 
 namespace Gianfriaur\HyperController\Attribute\Http\Controller;
 
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
+#[\Attribute(\Attribute::TARGET_METHOD)]
 class WithoutMiddleware
 {
 

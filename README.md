@@ -21,13 +21,13 @@ This library allows you to **unify all the routes of a controller into one** avo
 ## ✨ Features
 
 
-* Collects the routes of a controller into a single laravel route, [Read More](#)
-* Total customization of a route with parameters [Read More](#)
-* Middleware association for specific action, with insertion and/or removal rules [Read More](#)
+* Collects the routes of a controller into a single laravel route, [Read More](./doc/create_your_first_controller.MD)
+* Total customization of a route with parameters [Read More](./doc/create_your_first_controller.MD)
+* Middleware association for specific action, with insertion and/or removal rules [Read More](./doc/configuring_hyper_controller.MD)
 * Highly performing and cached
-* Free rewriting of all its parts and the ability to replace them via config [Read More](#)
-* Configuring controllers via attribute (no extra files) [Read More](#)
-* Compatibility with `gianfriaur/package-loader` package [Read More](#)
+* Free rewriting of all its parts and the ability to replace them via config [Read More](./doc/customization.MD)
+* Configuring controllers via attribute (no extra files) [Read More](./doc/configuring_hyper_controller.MD)
+* Compatibility with `gianfriaur/package-loader` package [Read More](./doc/package_loader_autoload.MD)
 
 ----
 ## 🤙🏼 Quickstart
@@ -40,10 +40,6 @@ This library allows you to **unify all the routes of a controller into one** avo
 > php artisan vendor:publish --provider="Gianfriaur\HyperController\HyperControllerServiceProvider"
 
 **3) Everything is ready, now you can start using HyperController [Create your first controller](./doc/create_your_first_controller.MD)**
-
-
-you are curious and want to go deeper, read the [full documentation](./doc/index.MD)
-
 
 
 ----
