@@ -46,6 +46,13 @@ This library allows you to **unify all the routes of a controller into one** avo
 ## 📝 Next releases
 
 - The `php artisan route:list -vv` command with the second level of verbosity will have to show all the information of a HyperController
+- Regex path in annotation 
+- Default parameter in path
+- Auto cast/parse/fetch model in parameter `[milestone V1.0.0]`
+
+- Tests List
+- `PackageWithHyperController` auto mapper in namespace
+
 
 ---- 
 ## 🎉 License
