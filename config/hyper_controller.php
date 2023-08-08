@@ -101,9 +101,12 @@ return [
     */
     'cache_services' => [
         'default' => [
-            'class' => \Gianfriaur\HyperController\Service\CacheService\DefaultCacheService::class,
+            'class' => \Gianfriaur\FastCache\Service\CacheService\DefaultCacheService::class,
             'options' => [
-                'cache_file' => 'cache/hyper_controllers.php'
+                'cache_file' => 'cache/hyper_controllers.php',
+                'file_env_override' => 'HYPER_CONTROLLER_CACHE_FILE',
+                'store' => \Gianfriaur\FastCache\Cache\Stores\FileArrayStore::class,
+                'driver_name' => 'hyper-controller'
             ]
         ]
     ],

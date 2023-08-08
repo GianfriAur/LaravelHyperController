@@ -2,12 +2,13 @@
 
 namespace Gianfriaur\HyperController\ServiceProvider;
 
+use Gianfriaur\FastCache\Service\CacheServiceRegister\DefaultCacheServiceRegister;
 use Gianfriaur\HyperController\Exception\BadPackageLoaderAutoloadException;
 use Gianfriaur\HyperController\Exception\BadServiceInterfaceException;
 use Gianfriaur\HyperController\Exception\HyperControllerMissingConfigException;
 use Gianfriaur\HyperController\PackageLoader\PackageLoaderInjector;
 use Gianfriaur\HyperController\Service\AnnotationParserService\AnnotationParserServiceInterface;
-use Gianfriaur\HyperController\Service\CacheService\CacheServiceInterface;
+use Gianfriaur\HyperController\Service\CacheService\HyperControllerCacheServiceInterface;
 use Gianfriaur\HyperController\Service\MacroProvider\MacroProviderInterface;
 use Gianfriaur\HyperController\Service\ResolverService\HyperControllerDependencyResolverInterface;
 use Illuminate\Contracts\Support\DeferrableProvider;
@@ -31,6 +32,7 @@ class ServicesProvider extends ServiceProvider implements DeferrableProvider
      * @throws HyperControllerMissingConfigException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @throws \Exception
      */
     public function register(): void
     {
@@ -38,10 +40,16 @@ class ServicesProvider extends ServiceProvider implements DeferrableProvider
         $this->registerSingletonService('macro_provider', 'macro_providers', MacroProviderInterface::class, 'hyper_controller.macro_provider', false);
         $this->registerSingletonService('annotation_parser', 'annotation_parsers', AnnotationParserServiceInterface::class, 'hyper_controller.annotation_parser', false);
 
-        $this->registerSingletonService('cache_service', 'cache_services', CacheServiceInterface::class, 'hyper_controller.cache_service', false);
+        [$cache_class, $cache_options] = $this->getGenericServiceDefinition('cache_service', 'cache_services', false);
+        DefaultCacheServiceRegister::registerCacheService(
+            $this->app,
+            HyperControllerCacheServiceInterface::class,
+            $cache_class,
+            $cache_options,
+            'hyper_controller.cache_service',
+        );
 
         $this->app->get(MacroProviderInterface::class)->registerMacros();
-
 
         $package_loader_autoload = $this->getConfig('package_loader_autoload', true);
 
@@ -63,7 +71,7 @@ class ServicesProvider extends ServiceProvider implements DeferrableProvider
 
                     $this->callAfterResolving('cache', function ($cache) use ($packageProvide) {
 
-                        $this->app->get(CacheServiceInterface::class)->registerCacheStore();
+                        $this->app->get(HyperControllerCacheServiceInterface::class)->registerCacheStore();
 
                         (new PackageLoaderInjector($this->app, $packageProvide))->registerHyperController();
                     });
